@@ -9,7 +9,7 @@ spec:
   author: liuzhihang
   logo: https://halo.run/logo
   settingName: plugin-prismjs-settings
-  configMapName: plugin-prism-configMap
+  configMapName: plugin-prismjs-configMap
   homepage: https://github.com/liuzhihang/plugin-prismjs
   displayName: "prism.js 代码高亮"
   description: "对 prism.js 的集成，支持在内容页高亮代码块"
