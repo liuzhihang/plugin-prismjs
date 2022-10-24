@@ -35,7 +35,7 @@ public class PrismJSHeadProcessor implements TemplateHeadProcessor {
                 }).orElse(Mono.empty()).then();
     }
 
-    private String highlightJsScript(String css, String customCss, String lineNumber) {
+    private String highlightJsScript(String css, String customCss, Boolean lineNumber) {
         return """
                 <!-- PluginPrismJS start -->
                 <link rel="stylesheet" href="/plugins/PluginPrismJS/assets/static/themes/%s"/>
@@ -103,7 +103,7 @@ public class PrismJSHeadProcessor implements TemplateHeadProcessor {
 
     @Data
     public static class BasicConfig {
-        String lineNumber;
+        Boolean lineNumber;
         String customCss;
         String css;
     }
