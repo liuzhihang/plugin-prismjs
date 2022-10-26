@@ -36,11 +36,12 @@ public class PrismJSHeadProcessor implements TemplateHeadProcessor {
     }
 
     private String highlightJsScript(String css, String customCss, Boolean lineNumber) {
+        // language=html
         return """
                 <!-- PluginPrismJS start -->
                 <link rel="stylesheet" href="/plugins/PluginPrismJS/assets/static/themes/%s"/>
                 <!-- 工具栏 css -->
-                <link rel="stylesheet" th:href="/plugins/PluginPrismJS/assets/static/plugins/toolbar/prism-toolbar.min.css"/>
+                <link rel="stylesheet" href="/plugins/PluginPrismJS/assets/static/plugins/toolbar/prism-toolbar.min.css"/>
                                 
                 <script src="/plugins/PluginPrismJS/assets/static/prism.js"></script>
                                 
@@ -57,22 +58,20 @@ public class PrismJSHeadProcessor implements TemplateHeadProcessor {
                     document.addEventListener("DOMContentLoaded", async function () {
                    
                         var customCss = %s;
-                                
-                        if (customCss !== null || customCss !== undefined || customCss !== '') {
+                        
+                        if (customCss !== null && customCss !== undefined && customCss !== '') {
                           await loadCss(`customCss`);
-                          s
                           console.log("CustomCss: ", customCss);
                         }
                     
                          if (%s) {
+                            console.log("ShowLineNumber");
                             
                             await loadCss(`/plugins/PluginPrismJS/assets/static/plugins/line-numbers/prism-line-numbers.min.css`);
                             await loadScript(`/plugins/PluginPrismJS/assets/static/plugins/line-numbers/prism-line-numbers.min.js`);
-                            
-                            console.log("ShowLineNumber");
                          }
                     
-                    });
+                    })
                     
                     function loadScript(url) {
                       return new Promise(function (resolve, reject) {
@@ -88,10 +87,11 @@ public class PrismJSHeadProcessor implements TemplateHeadProcessor {
                     function loadCss(url) {
                       return new Promise(function (resolve, reject) {
                         const css = document.createElement("link");
-                        css.rel = 'stylesheet';
+                        css.rel = "stylesheet";
                         css.href = url;
                         css.onload = resolve;
                         css.onerror = reject;
+                        
                         document.head.appendChild(css);
                       });
                     }
