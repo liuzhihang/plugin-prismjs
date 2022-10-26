@@ -1,6 +1,7 @@
 package run.halo.prismjs;
 
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.thymeleaf.context.ITemplateContext;
 import org.thymeleaf.model.IModel;
@@ -37,8 +38,7 @@ public class PrismJSHeadProcessor implements TemplateHeadProcessor {
 
     private String highlightJsScript(String css, String customCss, Boolean lineNumber) {
         // language=html
-        return """
-                <!-- PluginPrismJS start -->
+        String script = """
                 <link rel="stylesheet" href="/plugins/PluginPrismJS/assets/static/themes/%s"/>
                 <!-- 工具栏 css -->
                 <link rel="stylesheet" href="/plugins/PluginPrismJS/assets/static/plugins/toolbar/prism-toolbar.min.css"/>
@@ -53,52 +53,24 @@ public class PrismJSHeadProcessor implements TemplateHeadProcessor {
                             
                 <!-- 复制到剪贴板 -->
                 <script src="/plugins/PluginPrismJS/assets/static/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
-                               
-                <script>
-                    document.addEventListener("DOMContentLoaded", async function () {
-                   
-                        var customCss = %s;
-                        
-                        if (customCss !== null && customCss !== undefined && customCss !== '') {
-                          await loadCss(`customCss`);
-                          console.log("CustomCss: ", customCss);
-                        }
-                    
-                         if (%s) {
-                            console.log("ShowLineNumber");
-                            
-                            await loadCss(`/plugins/PluginPrismJS/assets/static/plugins/line-numbers/prism-line-numbers.min.css`);
-                            await loadScript(`/plugins/PluginPrismJS/assets/static/plugins/line-numbers/prism-line-numbers.min.js`);
-                         }
-                    
-                    })
-                    
-                    function loadScript(url) {
-                      return new Promise(function (resolve, reject) {
-                        const script = document.createElement("script");
-                        script.type = "text/javascript";
-                        script.src = url;
-                        script.onload = resolve;
-                        script.onerror = reject;
-                        document.head.appendChild(script);
-                      });
-                    }
-                    
-                    function loadCss(url) {
-                      return new Promise(function (resolve, reject) {
-                        const css = document.createElement("link");
-                        css.rel = "stylesheet";
-                        css.href = url;
-                        css.onload = resolve;
-                        css.onerror = reject;
-                        
-                        document.head.appendChild(css);
-                      });
-                    }
-                </script>
+                """.formatted(css);
+
+        if (lineNumber) {
+            script = script + """
+                <!-- 行号 css -->
+                <link rel="stylesheet" href="/plugins/PluginPrismJS/assets/static/plugins/line-numbers/prism-line-numbers.min.css"/>
                                 
-                <!-- PluginPrismJS end -->
-                """.formatted(css, customCss, lineNumber);
+                <script src="/plugins/PluginPrismJS/assets/static/plugins/line-numbers/prism-line-numbers.min.js"></script>
+                """;
+        }
+
+        if (StringUtils.isNotBlank(customCss)) {
+            script = script + """
+                    <link rel="stylesheet" href="%s"/>
+                    """.formatted(customCss);
+        }
+
+        return script;
     }
 
     @Data
