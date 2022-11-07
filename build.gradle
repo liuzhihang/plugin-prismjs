@@ -5,8 +5,7 @@ plugins {
     id 'java'
 }
 
-group 'run.halo.prismjs'
-version '0.0.1-SNAPSHOT'
+group 'run.liuzhihang.prismjs'
 sourceCompatibility = JavaVersion.VERSION_17
 
 repositories {
