@@ -25,5 +25,5 @@ jobs:
         with:
           name: plugin-prismjs
           path: |
-            build/libs/*-plain.jar
+            build/libs/*.jar
           retention-days: 1
