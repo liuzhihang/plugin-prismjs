@@ -39,7 +39,7 @@ jobs:
       - name: Download plugin-prismjs jar
         uses: actions/download-artifact@v2
         with:
-          name: plugin-sitemap
+          name: plugin-prismjs
           path: build/libs
       - name: Get Name of Artifact
         id: get_artifact
