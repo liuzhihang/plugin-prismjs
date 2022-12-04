@@ -3,7 +3,7 @@ plugins {
     id 'java'
 }
 
-group 'run.liuzhihang.prismjs'
+group 'com.liuzhihang.prismjs'
 sourceCompatibility = JavaVersion.VERSION_17
 
 repositories {
