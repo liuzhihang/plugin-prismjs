@@ -31,20 +31,38 @@ public class PrismJSHeadProcessor implements TemplateHeadProcessor {
         return settingFetcher.fetch("basic", BasicConfig.class)
                 .map(config -> {
                     final IModelFactory modelFactory = context.getModelFactory();
-                    model.add(modelFactory.createText(highlightJsScript(config.getCss(), config.getCustomCss(), config.getLineNumber())));
+                    model.add(modelFactory.createText(highlightJsScript(config)));
                     return Mono.empty();
                 }).orElse(Mono.empty()).then();
     }
 
-    private String highlightJsScript(String css, String customCss, Boolean lineNumber) {
+    private String highlightJsScript(BasicConfig config) {
         // language=html
-        String script = """
+        String script = "";
+
+        if (config.getAutoSupport()) {
+            // language=html
+            script = script + """
+                    <script src="/plugins/PluginPrismJS/assets/static/highlight.js/highlight.min.js"></script>
+                
+                    <script>
+                    	document.addEventListener("DOMContentLoaded", function () {
+                    		hljs.highlightAll()
+                    	})
+                    </script>
+                    """;
+        }
+
+        // language=html
+        script = script + """
                 <link rel="stylesheet" href="/plugins/PluginPrismJS/assets/static/themes/%s"/>
                 <!-- 工具栏 css -->
                 <link rel="stylesheet" href="/plugins/PluginPrismJS/assets/static/plugins/toolbar/prism-toolbar.min.css"/>
                                 
-                <script src="/plugins/PluginPrismJS/assets/static/prism.js"></script>
+                <script src="/plugins/PluginPrismJS/assets/static/components/prism-core.min.js"></script>
                                 
+                <!-- autoloader -->
+                <script src="/plugins/PluginPrismJS/assets/static/plugins/autoloader/prism-autoloader.min.js"></script>
                 <!-- 控制 toolbar -->
                 <script src="/plugins/PluginPrismJS/assets/static/plugins/toolbar/prism-toolbar.min.js"></script>
                                 
@@ -53,21 +71,23 @@ public class PrismJSHeadProcessor implements TemplateHeadProcessor {
                             
                 <!-- 复制到剪贴板 -->
                 <script src="/plugins/PluginPrismJS/assets/static/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
-                """.formatted(css);
+                """.formatted(config.getCss());
 
-        if (lineNumber) {
+        if (config.getLineNumber()) {
+            // language=html
             script = script + """
-                <!-- 行号 css -->
-                <link rel="stylesheet" href="/plugins/PluginPrismJS/assets/static/plugins/line-numbers/prism-line-numbers.min.css"/>
-                                
-                <script src="/plugins/PluginPrismJS/assets/static/plugins/line-numbers/prism-line-numbers.min.js"></script>
-                """;
+                    <!-- 行号 css -->
+                    <link rel="stylesheet" href="/plugins/PluginPrismJS/assets/static/plugins/line-numbers/prism-line-numbers.min.css"/>
+                                    
+                    <script src="/plugins/PluginPrismJS/assets/static/plugins/line-numbers/prism-line-numbers.min.js"></script>
+                    """;
         }
 
-        if (StringUtils.isNotBlank(customCss)) {
+        if (StringUtils.isNotBlank(config.getCustomCss())) {
+            // language=html
             script = script + """
                     <link rel="stylesheet" href="%s"/>
-                    """.formatted(customCss);
+                    """.formatted(config.getCss());
         }
 
         return script;
@@ -75,6 +95,7 @@ public class PrismJSHeadProcessor implements TemplateHeadProcessor {
 
     @Data
     public static class BasicConfig {
+        Boolean autoSupport;
         Boolean lineNumber;
         String customCss;
         String css;

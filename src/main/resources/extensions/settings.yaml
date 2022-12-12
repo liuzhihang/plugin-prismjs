@@ -8,6 +8,16 @@ spec:
       label: 基本设置
       formSchema:
         - $formkit: radio
+          name: autoSupport
+          label: 自动代码识别
+          value: false
+          options:
+            - label: 开启
+              value: true
+            - label: 关闭
+              value: false
+          help: 自动代码识别使用的是 highlight.js 的功能，详情参考：https://github.com/PrismJS/prism/issues/1313
+        - $formkit: radio
           name: lineNumber
           label: 代码块显示行号
           value: true
