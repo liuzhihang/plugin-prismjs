@@ -9,7 +9,7 @@ spec:
       formSchema:
         - $formkit: radio
           name: autoSupport
-          label: 自动代码识别
+          label: 自动识别代码块语言
           value: false
           options:
             - label: 开启
